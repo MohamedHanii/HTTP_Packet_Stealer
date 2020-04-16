@@ -38,7 +38,7 @@ def parse_application_layer_packet(ip_packet_payload: bytes) -> TcpPacket:
     tcp_header = {}
     tcp_header["Source Port"] = int(binascii.hexlify(ip_packet_payload[:2]),16)
     tcp_header["Destination Port"] = int(binascii.hexlify(ip_packet_payload[2:4]),16)
-    tcp_header["Data Offset"] = int(chr(binascii.hexlify(ip_packet_payload[12:13])[0]))
+    tcp_header["Data Offset"] = int(chr(binascii.hexlify(ip_packet_payload[12:13])[0]),16)
     tcp_header["Payload"] = ip_packet_payload[tcp_header["Data Offset"]*4:]
     return TcpPacket(tcp_header["Source Port"], tcp_header["Destination Port"], tcp_header["Data Offset"], tcp_header["Payload"])
 
@@ -47,7 +47,7 @@ def parse_network_layer_packet(ip_packet: bytes) -> IpPacket:
     # Parses raw bytes of an IPv4 packet
     # That's a byte literal (~byte array) check resources section
     ip_header = {}
-    ip_header['IHL'] = int(chr(binascii.hexlify(ip_packet[0:1])[1]))
+    ip_header['IHL'] = int(chr(binascii.hexlify(ip_packet[0:1])[1]),16)
     ip_header['Protocol'] = binascii.hexlify(ip_packet[9:10])
     ip_header['Source Address'] = parse_raw_ip_addr(ip_packet[12:16])
     ip_header['Destination Address'] = parse_raw_ip_addr(ip_packet[16:20])
